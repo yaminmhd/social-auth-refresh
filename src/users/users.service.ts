@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { CreateUserRequest } from './dto/create-user.request';
 import { hash } from 'bcryptjs';
 
@@ -16,5 +16,13 @@ export class UsersService {
       ...data,
       password: await hash(data.password, 10),
     });
+  }
+
+  async getUser(query: FilterQuery<User>): Promise<User> {
+    const user = (await this.userModel.findOne(query)).toObject();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 }
