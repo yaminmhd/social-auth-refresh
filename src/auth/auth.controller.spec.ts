@@ -34,7 +34,7 @@ describe('AuthController', () => {
   });
 
   it('should call AuthService.login with the correct parameters', async () => {
-    const mockUser: User = { _id: 'user-id' } as any; // Mock user
+    const mockUser: User = { _id: 'user-id' } as any;
     const mockResponse = {
       cookie: jest.fn(),
     } as unknown as Response;
@@ -44,7 +44,7 @@ describe('AuthController', () => {
     expect(authService.login).toHaveBeenCalledWith(mockUser, mockResponse);
   });
 
-  it('should thwo UnauthorizedException if user is not authenticated', async () => {
+  it('should UnauthorizedException if user is not authenticated', async () => {
     jest.spyOn(authService, 'login').mockImplementation(() => {
       throw new UnauthorizedException();
     });

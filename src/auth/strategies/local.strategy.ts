@@ -12,6 +12,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string) {
+    //upon verifying, this will set the user object to the request object. Making it available to the execution context
     return this.authService.verifyUser(email, password);
   }
 }
