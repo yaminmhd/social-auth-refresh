@@ -22,14 +22,109 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Project Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+### Libraries utilised
+
+- passport
+- mongoose (ORM for mongo)
+- mongodb
+- bcryptjs
+
+### JWT auth flows covered
+
+- Login flow with local strategy
+- Get users flow with JWT auth strategy
+- Refresh token flow with JWT refresh token strategy
+
+### Storing JWT token in response cookies
+
+Storing JWT (JSON Web Tokens) in response cookies is considered a best practice for several reasons related to security, usability, and compliance:
+
+1. **Security Against XSS**: Cookies are less susceptible to Cross-Site Scripting (XSS) attacks compared to local storage or session storage. This is especially true when using HTTP-only cookies, which are not accessible via JavaScript.
+
+2. **SameSite Attribute**: Cookies can be configured with the `SameSite` attribute, which helps protect against Cross-Site Request Forgery (CSRF) attacks by restricting how cookies are sent with cross-site requests.
+
+3. **Automatic Handling**: When cookies are used, they are automatically included in requests to the same domain. This simplifies the client-side code, as there's no need to manually add the token to request headers.
+
+4. **Secure Attribute**: By setting the `Secure` attribute, you ensure that cookies are only sent over HTTPS, adding an extra layer of security in transit.
+
+5. **Compliance and Standards**: Using cookies can help align with certain regulatory requirements and security standards that dictate secure handling of session information.
+
+6. **Domain and Path Scoping**: Cookies can be scoped to specific paths or subdomains, reducing the risk of leakage to unintended parts of your application.
+
+7. **Storage Limitations**: While cookies have size limitations, they are typically sufficient for storing JWTs, and using cookies avoids the potential pitfalls of reaching storage quotas in local or session storage.
+
+Overall, using cookies for storing JWTs leverages browser-provided security features, offering a more secure and standardized approach to token management in web applications. However, it's crucial to implement these cookies with the correct security flags (e.g., `HttpOnly`, `Secure`, `SameSite`) to maximize their protective benefits.
+
+### Diagram
+
+<img src="src/assets/diagram.svg" alt="JWT auth flow" />
+
+### Endpoints
+
+#### POST /users - create users
+
+```
+curl --request POST \
+  --url http://localhost:3000/users \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/9.3.3' \
+  --data '{
+  "email": "david@test.com",
+  "password": "SomeTestPassword123:@"
+}'
+```
+
+#### POST /auth/login
+
+```
+curl --request POST \
+  --url http://localhost:3000/auth/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"email": "david@test.com",
+	"password": "SomeTestPassword123:@"
+}'
+```
+
+#### GET /users - get all users(ensure cookies are already set)
+
+```
+curl --request GET \
+  --url http://localhost:3000/users \
+
+```
+
+#### POST /auth/refresh - get new access token utilising refresh tokens upon expiration of access token
+
+```
+curl --request POST \
+  --url http://localhost:3000/auth/refresh \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"email": "david@test.com",
+	"password": "SomeTestPassword123:@"
+}'
+
+```
 
 ## Project setup
 
 ```bash
 $ pnpm install
+
+# run mongo
+$ docker-compose up
+
+# cp .env.example to .env
+# populate <DB_NAME> and <YOUR_SECRET> with your own values
+# access token default expiry - 3600000ms (1hour)
+# refresh token default expiry - 604800000ms (7 days)
+$ cp .env.example .env
+
 ```
 
 ## Compile and run the project

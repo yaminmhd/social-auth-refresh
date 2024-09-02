@@ -10,6 +10,7 @@ import { User } from 'src/users/schema/user.schema';
 
 jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
+  hash: jest.fn(),
 }));
 
 describe('AuthService', () => {
@@ -26,6 +27,7 @@ describe('AuthService', () => {
           provide: UsersService,
           useValue: {
             getUser: jest.fn(),
+            updateUser: jest.fn(),
           },
         },
         {
@@ -62,9 +64,19 @@ describe('AuthService', () => {
         cookie: jest.fn(),
       } as any;
 
-      configService.getOrThrow.mockReturnValueOnce('3600000');
-      configService.getOrThrow.mockReturnValueOnce('secret');
-      configService.getOrThrow.mockReturnValueOnce('3600000');
+      configService.getOrThrow.mockImplementation((key: string) => {
+        if (
+          key === 'JWT_ACCESS_TOKEN_SECRET' ||
+          key === 'JWT_REFRESH_TOKEN_SECRET'
+        ) {
+          return 'secret';
+        } else if (
+          key === 'JWT_ACCESS_TOKEN_EXPIRATION_MS' ||
+          key === 'JWT_REFRESH_TOKEN_EXPIRATION_MS'
+        ) {
+          return '3600000';
+        }
+      });
       jwtService.sign.mockReturnValueOnce('access-token');
 
       await service.login(mockUser, response);
