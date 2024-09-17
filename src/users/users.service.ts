@@ -33,4 +33,12 @@ export class UsersService {
   async updateUser(query: FilterQuery<User>, data: UpdateQuery<User>) {
     return this.userModel.findOneAndUpdate(query, data);
   }
+
+  async getOrCreateUser(data: CreateUserRequest) {
+    const user = await this.userModel.findOne({ email: data.email });
+    if (user) {
+      return user;
+    }
+    return this.createUser(data);
+  }
 }

@@ -32,12 +32,14 @@
 - mongoose (ORM for mongo)
 - mongodb
 - bcryptjs
+- passport-google-oauth20
 
 ### JWT auth flows covered
 
 - Login flow with local strategy
 - Get users flow with JWT auth strategy
 - Refresh token flow with JWT refresh token strategy
+- OAuth Google login
 
 ### Storing JWT token in response cookies
 
@@ -120,7 +122,7 @@ $ pnpm install
 $ docker-compose up
 
 # cp .env.example to .env
-# populate <DB_NAME> and <YOUR_SECRET> with your own values
+# populate <DB_NAME>, <YOUR_SECRET>, <CLIENT_ID>, <CLIENT_SECRET> with your own values
 # access token default expiry - 3600000ms (1hour)
 # refresh token default expiry - 604800000ms (7 days)
 $ cp .env.example .env

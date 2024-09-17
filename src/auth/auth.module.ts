@@ -7,10 +7,21 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
-  imports: [UsersModule, PassportModule, JwtModule],
+  imports: [
+    UsersModule,
+    PassportModule.register({ session: true, defaultStrategy: 'oidc' }),
+    JwtModule,
+  ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    JwtRefreshStrategy,
+    GoogleStrategy,
+  ],
 })
 export class AuthModule {}
